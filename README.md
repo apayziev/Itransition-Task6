@@ -2,6 +2,8 @@
 
 A web application that generates random, fake user contact information using PostgreSQL stored procedures.
 
+🌐 **Live Demo**: [http://157.173.115.80/](http://157.173.115.80/)
+
 ## Features
 
 - 🌍 **Multi-locale support**: English (USA) and German (Germany)
@@ -22,7 +24,7 @@ A web application that generates random, fake user contact information using Pos
 ### Prerequisites
 
 - Python 3.8+
-- PostgreSQL 12+
+- PostgreSQL 17+
 
 ### Local Development
 

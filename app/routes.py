@@ -132,7 +132,7 @@ def api_markov():
     })
 
 
-@main.route('/docs')
+@main.route('/docs', strict_slashes=False)
 def docs():
     """Documentation page"""
     # Get the project root directory (parent of 'app' folder)
@@ -148,7 +148,7 @@ def docs():
     return render_template('docs.html', markdown_content=markdown_content)
 
 
-@main.route('/api')
+@main.route('/api', strict_slashes=False)
 def api_docs():
     """API Reference page"""
     return render_template('api.html')

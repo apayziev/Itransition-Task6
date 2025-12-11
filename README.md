@@ -1,8 +1,32 @@
 # Fake User Generator
 
-A web application that generates random, fake user contact information using PostgreSQL stored procedures.
+A PostgreSQL-based "Faker" library for generating realistic fake user data entirely using SQL stored procedures.
 
 🌐 **Live Demo**: [http://157.173.115.80/](http://157.173.115.80/)
+
+📚 **Documentation**: [Stored Procedures Reference](docs/STORED_PROCEDURES.md)
+
+## SQL Faker - Quick Reference
+
+```sql
+-- Generate fake users (high-performance: ~40,000 users/sec)
+SELECT * FROM faker.fast_generate_users('en_US', 12345, 0, 10);
+
+-- Individual generators
+SELECT faker.generate_first_name('en_US', 'M');     -- "John"
+SELECT faker.generate_last_name('de_DE');           -- "Müller"
+SELECT faker.generate_email('en_US', 'John', 'Doe'); -- "john.doe@gmail.com"
+SELECT faker.generate_phone('en_US');               -- "(555) 123-4567"
+SELECT faker.generate_address('de_DE');             -- "Hauptstraße 42, 10115 Berlin"
+
+-- Random utilities
+SELECT faker.random_normal(170, 10);    -- Normal distribution (height)
+SELECT faker.random_latitude();         -- Uniform on sphere (-90 to 90)
+SELECT faker.random_longitude();        -- Uniform (-180 to 180)
+
+-- Markov chain text
+SELECT faker.generate_bio('en_US', 42); -- "Quality drives innovation..."
+```
 
 ## Features
 
@@ -30,8 +54,8 @@ A web application that generates random, fake user contact information using Pos
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/fake-user-generator.git
-cd fake-user-generator
+git clone https://github.com/apayziev/Itransition-Task6.git
+cd Itransition-Task6
 
 # Run setup script
 chmod +x scripts/setup_local.sh
@@ -98,7 +122,7 @@ fake-user-generator/
 │   └── css/style.css
 ├── scripts/
 │   ├── setup_local.sh
-│   ├── deploy_production.sh
+│   ├── deploy.sh
 │   └── benchmark.py
 ├── docs/
 │   └── STORED_PROCEDURES.md
@@ -177,14 +201,18 @@ See [docs/STORED_PROCEDURES.md](docs/STORED_PROCEDURES.md) for detailed document
 
 ## Deployment
 
-### Production (Contabo VPS)
+### Docker Deployment
 
 ```bash
-# On your VPS
-sudo ./scripts/deploy_production.sh
+# Clone and deploy
+git clone https://github.com/apayziev/Itransition-Task6.git
+cd Itransition-Task6
+
+# Run deployment script (installs Docker, builds containers)
+sudo bash scripts/deploy.sh
 ```
 
-See the deployment script for detailed setup instructions.
+The app will be available at `http://your-server-ip/`
 
 ## License
 

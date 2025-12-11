@@ -1,8 +1,14 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, Response
 from app.database import get_db
 import os
 
 main = Blueprint('main', __name__)
+
+
+@main.route('/favicon.ico')
+def favicon():
+    """Return empty favicon to prevent 404 errors"""
+    return Response(status=204)
 
 
 @main.route('/', methods=['GET', 'POST'])

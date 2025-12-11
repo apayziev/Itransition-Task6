@@ -1,7 +1,5 @@
--- Data Generator Functions for Fake User Generator
--- Locale-aware functions to generate fake user data components.
+-- Data Generator Functions
 
--- Generate random first name from lookup table
 CREATE OR REPLACE FUNCTION faker.generate_first_name(
     p_locale VARCHAR DEFAULT 'en_US',
     p_gender CHAR DEFAULT NULL

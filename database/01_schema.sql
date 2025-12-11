@@ -1,16 +1,5 @@
--- ============================================================================
--- Fake User Generator - Database Schema
--- ============================================================================
--- This script creates the base tables for the faker library.
--- Design principle: Single tables with locale field for extensibility.
--- ============================================================================
-
--- Create schema for faker library
+-- Database Schema
 CREATE SCHEMA IF NOT EXISTS faker;
-
--- ============================================================================
--- LOOKUP TABLES
--- ============================================================================
 
 -- Locales table
 CREATE TABLE IF NOT EXISTS faker.locales (

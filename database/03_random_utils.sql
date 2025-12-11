@@ -1,7 +1,6 @@
--- Random Utility Functions for Fake User Generator
--- Core random number generation functions with seed support.
+-- Random Utility Functions
 
--- Sets the random seed for reproducible results
+-- Sets the random seed
 CREATE OR REPLACE FUNCTION faker.seed_random(seed_value DOUBLE PRECISION)
 RETURNS VOID AS $$
 BEGIN
@@ -9,7 +8,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Computes deterministic seed using golden ratio multiplication
+-- Computes deterministic seed
 CREATE OR REPLACE FUNCTION faker.compute_seed(
     base_seed INTEGER,
     index1 INTEGER DEFAULT 0,
@@ -27,7 +26,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
--- Random integer in range (inclusive)
 CREATE OR REPLACE FUNCTION faker.random_int(min_val INTEGER, max_val INTEGER)
 RETURNS INTEGER AS $$
 BEGIN
@@ -35,7 +33,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Random float in range
 CREATE OR REPLACE FUNCTION faker.random_float(
     min_val DOUBLE PRECISION,
     max_val DOUBLE PRECISION
@@ -46,7 +43,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Normal distribution using Box-Muller transform
+-- Box-Muller transform
 CREATE OR REPLACE FUNCTION faker.random_normal(
     mean DOUBLE PRECISION DEFAULT 0,
     stddev DOUBLE PRECISION DEFAULT 1
@@ -64,7 +61,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Returns TRUE with given probability (0 to 1)
 CREATE OR REPLACE FUNCTION faker.random_boolean(probability DOUBLE PRECISION DEFAULT 0.5)
 RETURNS BOOLEAN AS $$
 BEGIN
@@ -72,7 +68,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Selects random element from array
 CREATE OR REPLACE FUNCTION faker.random_element(elements TEXT[])
 RETURNS TEXT AS $$
 DECLARE
@@ -86,7 +81,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Random digit (0-9)
 CREATE OR REPLACE FUNCTION faker.random_digit()
 RETURNS CHAR AS $$
 BEGIN
@@ -94,7 +88,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Random lowercase letter
 CREATE OR REPLACE FUNCTION faker.random_letter()
 RETURNS CHAR AS $$
 BEGIN
@@ -102,7 +95,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Replace # with digits and ? with letters in template
 CREATE OR REPLACE FUNCTION faker.format_string(template TEXT)
 RETURNS TEXT AS $$
 DECLARE
@@ -124,7 +116,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Random latitude uniformly distributed on sphere: asin(2u - 1) * 180/π
 CREATE OR REPLACE FUNCTION faker.random_latitude()
 RETURNS DOUBLE PRECISION AS $$
 DECLARE
@@ -135,7 +126,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Random longitude (-180 to 180)
 CREATE OR REPLACE FUNCTION faker.random_longitude()
 RETURNS DOUBLE PRECISION AS $$
 BEGIN
@@ -143,7 +133,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Random geographic coordinates
 CREATE OR REPLACE FUNCTION faker.random_coordinates()
 RETURNS TABLE (latitude DOUBLE PRECISION, longitude DOUBLE PRECISION) AS $$
 BEGIN

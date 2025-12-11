@@ -1,7 +1,5 @@
 -- Main User Generation Procedure
--- Combines all generators to produce fake users with reproducibility.
 
--- Generate single fake user with all attributes
 CREATE OR REPLACE FUNCTION faker.generate_user(
     p_locale VARCHAR DEFAULT 'en_US',
     p_seed INTEGER DEFAULT 12345,

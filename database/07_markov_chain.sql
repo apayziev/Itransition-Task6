@@ -1,11 +1,6 @@
--- MARKOV CHAIN TEXT GENERATOR
--- Generates realistic random text using bigram transitions.
--- Optimizations: Integer IDs, pre-computed cumulative weights, HSTORE index for O(1) lookups
--- Performance: ~28% faster than naive implementation
-
+-- Markov Chain Text Generator
 CREATE EXTENSION IF NOT EXISTS hstore;
 
--- Original text-based transitions (easy to maintain)
 CREATE TABLE IF NOT EXISTS faker.markov_transitions (
     id SERIAL PRIMARY KEY,
     locale VARCHAR(10) NOT NULL,

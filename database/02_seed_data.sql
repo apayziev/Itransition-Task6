@@ -1,21 +1,8 @@
--- ============================================================================
--- Fake User Generator - Seed Data
--- ============================================================================
--- Lookup data for en_US and de_DE locales
--- Large enough to support 10,000 - 1,000,000 unique combinations
--- ============================================================================
-
--- ============================================================================
--- LOCALES
--- ============================================================================
+-- Seed Data
 INSERT INTO faker.locales (code, name) VALUES
     ('en_US', 'English (USA)'),
     ('de_DE', 'German (Germany)')
 ON CONFLICT (code) DO NOTHING;
-
--- ============================================================================
--- TITLES
--- ============================================================================
 
 -- English titles
 INSERT INTO faker.titles (locale, title, gender) VALUES
@@ -34,9 +21,7 @@ INSERT INTO faker.titles (locale, title, gender) VALUES
     ('de_DE', 'Prof.', NULL),
     ('de_DE', 'Prof. Dr.', NULL);
 
--- ============================================================================
--- FIRST NAMES - English (200+ names for variety)
--- ============================================================================
+-- First names
 INSERT INTO faker.first_names (locale, name, gender) VALUES
     -- Male names
     ('en_US', 'James', 'M'), ('en_US', 'Robert', 'M'), ('en_US', 'John', 'M'),
@@ -107,9 +92,7 @@ INSERT INTO faker.first_names (locale, name, gender) VALUES
     ('en_US', 'Brittany', 'F'), ('en_US', 'Charlotte', 'F'), ('en_US', 'Marie', 'F'),
     ('en_US', 'Kayla', 'F'), ('en_US', 'Alexis', 'F'), ('en_US', 'Lori', 'F');
 
--- ============================================================================
--- FIRST NAMES - German (200+ names)
--- ============================================================================
+-- German first names
 INSERT INTO faker.first_names (locale, name, gender) VALUES
     -- Male names
     ('de_DE', 'Peter', 'M'), ('de_DE', 'Michael', 'M'), ('de_DE', 'Thomas', 'M'),
@@ -179,9 +162,7 @@ INSERT INTO faker.first_names (locale, name, gender) VALUES
     ('de_DE', 'Ella', 'F'), ('de_DE', 'Nele', 'F'), ('de_DE', 'Maja', 'F'),
     ('de_DE', 'Greta', 'F'), ('de_DE', 'Klara', 'F'), ('de_DE', 'Ida', 'F');
 
--- ============================================================================
--- LAST NAMES - English (300+ surnames)
--- ============================================================================
+-- English last names
 INSERT INTO faker.last_names (locale, name) VALUES
     ('en_US', 'Smith'), ('en_US', 'Johnson'), ('en_US', 'Williams'), ('en_US', 'Brown'),
     ('en_US', 'Jones'), ('en_US', 'Garcia'), ('en_US', 'Miller'), ('en_US', 'Davis'),
@@ -226,9 +207,7 @@ INSERT INTO faker.last_names (locale, name) VALUES
     ('en_US', 'Robertson'), ('en_US', 'Hunt'), ('en_US', 'Black'), ('en_US', 'Daniels'),
     ('en_US', 'Palmer'), ('en_US', 'Mills'), ('en_US', 'Grant'), ('en_US', 'Stone');
 
--- ============================================================================
--- LAST NAMES - German (300+ surnames)
--- ============================================================================
+-- German last names
 INSERT INTO faker.last_names (locale, name) VALUES
     ('de_DE', 'Müller'), ('de_DE', 'Schmidt'), ('de_DE', 'Schneider'), ('de_DE', 'Fischer'),
     ('de_DE', 'Weber'), ('de_DE', 'Meyer'), ('de_DE', 'Wagner'), ('de_DE', 'Becker'),
@@ -265,9 +244,7 @@ INSERT INTO faker.last_names (locale, name) VALUES
     ('de_DE', 'Reuter'), ('de_DE', 'Kraft'), ('de_DE', 'Barth'), ('de_DE', 'Siebert'),
     ('de_DE', 'Thiele'), ('de_DE', 'Wendt'), ('de_DE', 'Wegner'), ('de_DE', 'Jost');
 
--- ============================================================================
--- STREET SUFFIXES
--- ============================================================================
+-- Street suffixes
 INSERT INTO faker.street_suffixes (locale, suffix) VALUES
     ('en_US', 'Street'), ('en_US', 'Avenue'), ('en_US', 'Boulevard'), ('en_US', 'Drive'),
     ('en_US', 'Lane'), ('en_US', 'Road'), ('en_US', 'Way'), ('en_US', 'Court'),
@@ -275,9 +252,7 @@ INSERT INTO faker.street_suffixes (locale, suffix) VALUES
     ('de_DE', 'straße'), ('de_DE', 'weg'), ('de_DE', 'allee'), ('de_DE', 'platz'),
     ('de_DE', 'ring'), ('de_DE', 'gasse'), ('de_DE', 'damm'), ('de_DE', 'ufer');
 
--- ============================================================================
--- STREETS (Base names to combine with suffixes)
--- ============================================================================
+-- Streets
 INSERT INTO faker.streets (locale, name) VALUES
     -- English streets
     ('en_US', 'Main'), ('en_US', 'Oak'), ('en_US', 'Pine'), ('en_US', 'Maple'),
@@ -301,9 +276,7 @@ INSERT INTO faker.streets (locale, name) VALUES
     ('de_DE', 'Friedens'), ('de_DE', 'Freiheits'), ('de_DE', 'Sonnen'), ('de_DE', 'Stern'),
     ('de_DE', 'Blumen'), ('de_DE', 'Wasser'), ('de_DE', 'Feld'), ('de_DE', 'Sand');
 
--- ============================================================================
--- CITIES
--- ============================================================================
+-- Cities
 INSERT INTO faker.cities (locale, name) VALUES
     -- US cities
     ('en_US', 'New York'), ('en_US', 'Los Angeles'), ('en_US', 'Chicago'), ('en_US', 'Houston'),
@@ -328,9 +301,7 @@ INSERT INTO faker.cities (locale, name) VALUES
     ('de_DE', 'Freiburg'), ('de_DE', 'Krefeld'), ('de_DE', 'Mainz'), ('de_DE', 'Lübeck'),
     ('de_DE', 'Erfurt'), ('de_DE', 'Rostock'), ('de_DE', 'Kassel'), ('de_DE', 'Oberhausen');
 
--- ============================================================================
--- STATES
--- ============================================================================
+-- States
 INSERT INTO faker.states (locale, name, abbreviation) VALUES
     -- US States
     ('en_US', 'Alabama', 'AL'), ('en_US', 'Alaska', 'AK'), ('en_US', 'Arizona', 'AZ'),
@@ -359,17 +330,13 @@ INSERT INTO faker.states (locale, name, abbreviation) VALUES
     ('de_DE', 'Sachsen', 'SN'), ('de_DE', 'Sachsen-Anhalt', 'ST'),
     ('de_DE', 'Schleswig-Holstein', 'SH'), ('de_DE', 'Thüringen', 'TH');
 
--- ============================================================================
--- POSTAL CODE FORMATS
--- ============================================================================
+-- Postal formats
 INSERT INTO faker.postal_formats (locale, format) VALUES
     ('en_US', '#####'),
     ('en_US', '#####-####'),
     ('de_DE', '#####');
 
--- ============================================================================
--- PHONE FORMATS
--- ============================================================================
+-- Phone formats
 INSERT INTO faker.phone_formats (locale, format) VALUES
     ('en_US', '(###) ###-####'),
     ('en_US', '###-###-####'),
@@ -380,9 +347,7 @@ INSERT INTO faker.phone_formats (locale, format) VALUES
     ('de_DE', '+49 (0)### #######'),
     ('de_DE', '0###/#######');
 
--- ============================================================================
--- EMAIL DOMAINS
--- ============================================================================
+-- Email domains
 INSERT INTO faker.email_domains (locale, domain) VALUES
     ('en_US', 'gmail.com'), ('en_US', 'yahoo.com'), ('en_US', 'hotmail.com'),
     ('en_US', 'outlook.com'), ('en_US', 'aol.com'), ('en_US', 'icloud.com'),
@@ -391,18 +356,14 @@ INSERT INTO faker.email_domains (locale, domain) VALUES
     ('de_DE', 't-online.de'), ('de_DE', 'freenet.de'), ('de_DE', 'yahoo.de'),
     ('de_DE', 'outlook.de'), ('de_DE', 'mail.de'), ('de_DE', 'posteo.de');
 
--- ============================================================================
--- EYE COLORS
--- ============================================================================
+-- Eye colors
 INSERT INTO faker.eye_colors (locale, color) VALUES
     ('en_US', 'Brown'), ('en_US', 'Blue'), ('en_US', 'Green'), ('en_US', 'Hazel'),
     ('en_US', 'Gray'), ('en_US', 'Amber'),
     ('de_DE', 'Braun'), ('de_DE', 'Blau'), ('de_DE', 'Grün'), ('de_DE', 'Haselnuss'),
     ('de_DE', 'Grau'), ('de_DE', 'Bernstein');
 
--- ============================================================================
--- ADDRESS FORMATS
--- ============================================================================
+-- Address formats
 INSERT INTO faker.address_formats (locale, format) VALUES
     ('en_US', '{street_number} {street_name} {street_suffix}, {city}, {state} {postal}'),
     ('en_US', '{street_number} {street_name} {street_suffix}, Apt {apt}, {city}, {state} {postal}'),

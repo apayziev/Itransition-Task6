@@ -1,8 +1,5 @@
--- OPTIMIZED High-Performance Generators
--- Uses array-based lookups and set-based operations for maximum speed.
--- Key optimizations: z-score lookup (10x), latitude lookup (2x), translate() for phones
+-- Optimized High-Performance Generators
 
--- High-performance batch user generation using set-based operations
 CREATE OR REPLACE FUNCTION faker.fast_generate_users(
     p_locale VARCHAR DEFAULT 'en_US',
     p_seed INTEGER DEFAULT 12345,

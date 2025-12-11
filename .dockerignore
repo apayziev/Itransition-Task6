@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.env
+.env.local
+*.log
+.git/
+.gitignore
+.dockerignore
+*.md
+docs/
+.pytest_cache/
+.coverage
+htmlcov/

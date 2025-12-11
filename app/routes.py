@@ -135,13 +135,15 @@ def api_markov():
 @main.route('/docs')
 def docs():
     """Documentation page"""
-    docs_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'docs', 'STORED_PROCEDURES.md')
+    # Get the project root directory (parent of 'app' folder)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    docs_path = os.path.join(project_root, 'docs', 'STORED_PROCEDURES.md')
     
     try:
         with open(docs_path, 'r', encoding='utf-8') as f:
             markdown_content = f.read()
     except FileNotFoundError:
-        markdown_content = "# Documentation\n\nDocumentation file not found."
+        markdown_content = f"# Documentation\n\nDocumentation file not found.\n\nLooking for: {docs_path}"
     
     return render_template('docs.html', markdown_content=markdown_content)
 

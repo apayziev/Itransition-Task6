@@ -10,8 +10,7 @@ venv/
 .git/
 .gitignore
 .dockerignore
-*.md
-docs/
+README.md
 .pytest_cache/
 .coverage
 htmlcov/

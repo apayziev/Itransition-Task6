@@ -6,14 +6,14 @@ services:
     container_name: faker_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: faker_user
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
-      POSTGRES_DB: faker_db
+      POSTGRES_USER: ${DB_USER:-faker_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-faker_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U faker_user -d faker_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-faker_user} -d ${DB_NAME:-faker_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,9 +25,9 @@ services:
     ports:
       - "5000:5000"
     environment:
-      DATABASE_URL: postgresql://faker_user:${DB_PASSWORD:-changeme123}@db:5432/faker_db
-      FLASK_ENV: production
-      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-in-production}
+      DATABASE_URL: postgresql://${DB_USER:-faker_user}:${DB_PASSWORD}@db:5432/${DB_NAME:-faker_db}
+      FLASK_ENV: ${FLASK_ENV:-production}
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="docs-container">
+    <div class="docs-sidebar">
+        <h3>📚 Documentation</h3>
+        <nav class="docs-nav">
+            <a href="#overview" class="docs-nav-link">Overview</a>
+            <a href="#installation" class="docs-nav-link">Installation</a>
+            <a href="#quick-start" class="docs-nav-link">Quick Start</a>
+            <a href="#core-concepts" class="docs-nav-link">Core Concepts</a>
+            <a href="#random-utility-functions" class="docs-nav-link">Random Utilities</a>
+            <a href="#generator-functions" class="docs-nav-link">Generators</a>
+            <a href="#main-procedures" class="docs-nav-link">Main Procedures</a>
+            <a href="#high-performance-procedures" class="docs-nav-link">High-Performance</a>
+            <a href="#algorithms" class="docs-nav-link">Algorithms</a>
+            <a href="#performance" class="docs-nav-link">Performance</a>
+            <a href="#markov-chain-text-generation-optional" class="docs-nav-link">Markov Chain</a>
+            <a href="#extensibility" class="docs-nav-link">Extensibility</a>
+        </nav>
+        <div class="docs-sidebar-footer">
+            <a href="/" class="btn btn-secondary btn-sm">← Back to App</a>
+        </div>
+    </div>
+    <div class="docs-content" id="docs-content">
+        <!-- Markdown content will be rendered here -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<script>
+    const markdownContent = {{ markdown_content|tojson }};
+    
+    // Configure marked for GitHub-flavored markdown
+    marked.setOptions({
+        gfm: true,
+        breaks: true,
+        highlight: function(code, lang) {
+            if (Prism.languages[lang]) {
+                return Prism.highlight(code, Prism.languages[lang], lang);
+            }
+            return code;
+        }
+    });
+    
+    // Render markdown
+    document.getElementById('docs-content').innerHTML = marked.parse(markdownContent);
+    
+    // Add IDs to headings for navigation
+    document.querySelectorAll('.docs-content h2, .docs-content h3').forEach(heading => {
+        const id = heading.textContent.toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-');
+        heading.id = id;
+    });
+    
+    // Highlight active nav link on scroll
+    const navLinks = document.querySelectorAll('.docs-nav-link');
+    const sections = document.querySelectorAll('.docs-content h2');
+    
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (scrollY >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+{% endblock %}

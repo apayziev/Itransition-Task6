@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fake User Generator{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="{{ url_for('main.index') }}" class="logo">
+                    <span>Fake User Generator</span>
+                </a>
+                <div class="nav-links">
+                    <a href="{{ url_for('main.docs') }}" class="nav-link">Docs</a>
+                    <a href="{{ url_for('main.api_docs') }}" class="nav-link">API</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">© 2024 Fake User Generator — Powered by SQL Stored Procedures</p>
+                <div class="footer-links">
+                    <a href="https://github.com" target="_blank" class="footer-link">GitHub</a>
+                    <a href="/docs" class="footer-link">Documentation</a>
+                    <a href="/api" class="footer-link">API Reference</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="api-container">
+    <div class="api-header">
+        <h1>🔌 API Reference</h1>
+        <p>RESTful endpoints for programmatic access to the Fake User Generator</p>
+        <a href="/" class="btn btn-secondary btn-sm">← Back to App</a>
+    </div>
+    
+    <div class="api-section">
+        <h2>Base URL</h2>
+        <div class="api-code-block">
+            <code>http://localhost:5000/api</code>
+        </div>
+    </div>
+
+    <div class="api-section">
+        <h2>Endpoints</h2>
+        
+        <!-- Generate Users -->
+        <div class="api-endpoint">
+            <div class="api-endpoint-header">
+                <span class="api-method post">POST</span>
+                <span class="api-path">/api/generate</span>
+            </div>
+            <p class="api-description">Generate a batch of fake users with reproducible results.</p>
+            
+            <h4>Request Body</h4>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>locale</code></td>
+                        <td>string</td>
+                        <td>"en_US"</td>
+                        <td>Locale code (en_US, de_DE)</td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>integer</td>
+                        <td>12345</td>
+                        <td>Seed for reproducibility</td>
+                    </tr>
+                    <tr>
+                        <td><code>batch_index</code></td>
+                        <td>integer</td>
+                        <td>0</td>
+                        <td>Batch number (0-indexed)</td>
+                    </tr>
+                    <tr>
+                        <td><code>batch_size</code></td>
+                        <td>integer</td>
+                        <td>10</td>
+                        <td>Users per batch</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Example Request</h4>
+            <pre class="api-code"><code class="language-bash">curl -X POST http://localhost:5000/api/generate \
+  -H "Content-Type: application/json" \
+  -d '{"locale": "en_US", "seed": 42, "batch_index": 0, "batch_size": 5}'</code></pre>
+            
+            <h4>Example Response</h4>
+            <pre class="api-code"><code class="language-json">[
+  {
+    "full_name": "Dr. John Michael Smith",
+    "email": "john.smith@gmail.com",
+    "phone": "+1 (555) 123-4567",
+    "address": "123 Oak Street, New York, NY 10001",
+    "latitude": 40.7128,
+    "longitude": -74.0060,
+    "height_cm": 175.5,
+    "weight_kg": 78.2,
+    "eye_color": "Blue"
+  },
+  ...
+]</code></pre>
+        </div>
+
+        <!-- Benchmark -->
+        <div class="api-endpoint">
+            <div class="api-endpoint-header">
+                <span class="api-method post">POST</span>
+                <span class="api-path">/api/benchmark</span>
+            </div>
+            <p class="api-description">Run a performance benchmark measuring users/second generation speed.</p>
+            
+            <h4>Request Body</h4>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>locale</code></td>
+                        <td>string</td>
+                        <td>"en_US"</td>
+                        <td>Locale code</td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>integer</td>
+                        <td>12345</td>
+                        <td>Seed value</td>
+                    </tr>
+                    <tr>
+                        <td><code>count</code></td>
+                        <td>integer</td>
+                        <td>1000</td>
+                        <td>Number of users to generate</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Example Response</h4>
+            <pre class="api-code"><code class="language-json">{
+  "count": 10000,
+  "elapsed_seconds": 0.2385,
+  "users_per_second": 41922.43
+}</code></pre>
+        </div>
+
+        <!-- Markov Text -->
+        <div class="api-endpoint">
+            <div class="api-endpoint-header">
+                <span class="api-method post">POST</span>
+                <span class="api-path">/api/markov</span>
+            </div>
+            <p class="api-description">Generate random text using Markov chain (locale-specific).</p>
+            
+            <h4>Request Body</h4>
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>locale</code></td>
+                        <td>string</td>
+                        <td>"en_US"</td>
+                        <td>Language code (en_US, de_DE)</td>
+                    </tr>
+                    <tr>
+                        <td><code>seed</code></td>
+                        <td>integer</td>
+                        <td>12345</td>
+                        <td>Seed for reproducibility</td>
+                    </tr>
+                    <tr>
+                        <td><code>min_words</code></td>
+                        <td>integer</td>
+                        <td>10</td>
+                        <td>Minimum words in output</td>
+                    </tr>
+                    <tr>
+                        <td><code>max_words</code></td>
+                        <td>integer</td>
+                        <td>25</td>
+                        <td>Maximum words in output</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4>Example Response</h4>
+            <pre class="api-code"><code class="language-json">{
+  "locale": "en_US",
+  "samples": [
+    {
+      "seed": 42,
+      "text": "Quality drives innovation. Our team delivers creative solutions with excellence."
+    },
+    {
+      "seed": 43,
+      "text": "Innovation starts here. We build success through collaboration and dedication."
+    }
+  ]
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="api-section">
+        <h2>SQL Stored Procedures</h2>
+        <p>For direct database access, use the following stored procedures:</p>
+        
+        <div class="api-code-block">
+            <pre><code class="language-sql">-- Generate batch of users (high-performance)
+SELECT * FROM faker.fast_generate_users('en_US', 12345, 0, 10);
+
+-- Bulk generation for benchmarking
+SELECT * FROM faker.fast_generate_users_batch('en_US', 12345, 10000);
+
+-- Generate Markov chain text
+SELECT faker.generate_bio('en_US', 42);
+SELECT faker.blazing_fast_markov_text('de_DE', 100, 5, 15);</code></pre>
+        </div>
+        
+        <p>See <a href="/docs">full documentation</a> for detailed procedure reference.</p>
+    </div>
+</div>
+{% endblock %}

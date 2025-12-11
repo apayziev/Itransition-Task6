@@ -1,0 +1,511 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="{% if users %}has-results{% endif %}">
+<!-- Hero Section - Welcome on home page -->
+<section class="hero-section">
+    <h1 class="hero-title">Fake User Generator</h1>
+    <p class="hero-subtitle">
+        Generate realistic test data with optimized SQL stored procedures, performance benchmarks, and Markov chain text generation.
+    </p>
+    <div class="hero-features">
+        <span class="hero-feature">
+            <span class="hero-feature-icon">✓</span>
+            Multiple Locales
+        </span>
+        <span class="hero-feature">
+            <span class="hero-feature-icon">✓</span>
+            Reproducible Seeds
+        </span>
+        <span class="hero-feature">
+            <span class="hero-feature-icon">✓</span>
+            40K+ Users/sec
+        </span>
+    </div>
+</section>
+
+<!-- Generator Card -->
+<div class="generator-card">
+    <div class="generator-header">
+        <div class="generator-title">
+            <h2>Generate Users</h2>
+        </div>
+    </div>
+
+    <form method="POST" class="generator-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="locale">Locale</label>
+                <select name="locale" id="locale" class="form-select">
+                    {% for locale in locales %}
+                    <option value="{{ locale.code }}" {% if locale.code == current_locale %}selected{% endif %}>
+                        {% if locale.code == 'en_US' %}🇺🇸{% elif locale.code == 'de_DE' %}🇩🇪{% endif %} {{ locale.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <span class="form-hint">Region for names and addresses</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="seed">
+                    Seed
+                    <span class="tooltip">
+                        <span class="tooltip-icon">?</span>
+                        <span class="tooltip-text">
+                            The seed guarantees the exact same user data is generated every time for reproducibility. Use the same seed to get identical results.
+                        </span>
+                    </span>
+                </label>
+                <input type="number" name="seed" id="seed" value="{{ seed }}" min="0" class="form-input" placeholder="e.g., 12345">
+                <span class="form-hint">For reproducible results</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="batch_size">Batch Size</label>
+                <select name="batch_size" id="batch_size" class="form-select">
+                    {% for size in [10, 20, 50, 100] %}
+                    <option value="{{ size }}" {% if size == batch_size %}selected{% endif %}>{{ size }} users</option>
+                    {% endfor %}
+                </select>
+                <span class="form-hint">Users per page</span>
+            </div>
+        </div>
+
+        <input type="hidden" name="batch_index" value="{{ batch_index }}">
+
+        <div class="form-actions">
+            <button type="submit" name="action" value="generate" class="btn btn-primary">
+                <span class="btn-icon">✦</span> Generate
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Results Section -->
+{% if users %}
+<section class="results-section fade-in">
+    <div class="results-header">
+        <div class="results-title">
+            <h2>Results</h2>
+            <span class="results-count">{{ users|length }} users</span>
+        </div>
+        <form method="POST" class="goto-batch-form">
+            <input type="hidden" name="locale" value="{{ current_locale }}">
+            <input type="hidden" name="seed" value="{{ seed }}">
+            <input type="hidden" name="batch_size" value="{{ batch_size }}">
+            <input type="hidden" name="action" value="goto">
+            <label class="goto-label">Go to batch:</label>
+            <input type="number" name="goto_batch" class="goto-input" value="{{ batch_index + 1 }}" min="1">
+            <button type="submit" class="btn btn-secondary btn-sm">Go</button>
+        </form>
+    </div>
+    
+    <div class="table-wrapper">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Lat</th>
+                    <th>Lon</th>
+                    <th>Physical</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td><span class="user-index">{{ batch_index * batch_size + loop.index }}</span></td>
+                    <td class="user-name">{{ user.full_name }}</td>
+                    <td class="user-email">{{ user.email }}</td>
+                    <td class="user-phone">{{ user.phone }}</td>
+                    <td class="user-address">{{ user.address }}</td>
+                    <td class="user-coords">{{ "%.4f"|format(user.latitude) }}</td>
+                    <td class="user-coords">{{ "%.4f"|format(user.longitude) }}</td>
+                    <td class="user-physical">
+                        <span class="user-physical-main">{{ user.height_cm|round|int }}cm / {{ user.weight_kg|round|int }}kg</span><br>
+                        <span class="user-physical-sub">{{ user.eye_color }} eyes</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-footer">
+        <div class="table-footer-info">
+            Batch <span>{{ batch_index + 1 }}</span> · Users <span>{{ batch_index * batch_size + 1 }}</span>–<span>{{ batch_index * batch_size + users|length }}</span> · Locale: <span>{{ current_locale }}</span> · Seed: <span>{{ seed }}</span>
+        </div>
+        <div class="table-footer-actions">
+            {% if batch_index > 0 %}
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="locale" value="{{ current_locale }}">
+                <input type="hidden" name="seed" value="{{ seed }}">
+                <input type="hidden" name="batch_size" value="{{ batch_size }}">
+                <input type="hidden" name="batch_index" value="{{ batch_index }}">
+                <button type="submit" name="action" value="prev" class="btn btn-secondary btn-sm">« Prev</button>
+            </form>
+            {% endif %}
+            <form method="POST" style="display: inline;">
+                <input type="hidden" name="locale" value="{{ current_locale }}">
+                <input type="hidden" name="seed" value="{{ seed }}">
+                <input type="hidden" name="batch_size" value="{{ batch_size }}">
+                <input type="hidden" name="batch_index" value="{{ batch_index }}">
+                <button type="submit" name="action" value="next" class="btn btn-secondary btn-sm">Next »</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- Empty State with Blurred Preview - Collapsible -->
+<section class="preview-section">
+    <div class="preview-card">
+        <div class="preview-toggle active" id="preview-toggle">
+            <div class="preview-toggle-content">
+                <h3>👤 Data Preview</h3>
+                <p>Sample preview of generated user data</p>
+            </div>
+            <span class="preview-toggle-icon" id="preview-toggle-icon">▲</span>
+        </div>
+        <div class="preview-body expanded" id="preview-body">
+            <div class="empty-state-overlay">
+                <div class="empty-state-content">
+                    <div class="empty-state-icon">👤</div>
+                    <h3>Ready to Generate</h3>
+                    <p>Configure your settings above and click <strong>Generate</strong> to create realistic test data.</p>
+                </div>
+            </div>
+            <div class="table-wrapper table-preview">
+                <table class="users-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Lat</th>
+                    <th>Lon</th>
+                    <th>Physical</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="user-index">1</span></td>
+                    <td class="user-name">John Smith</td>
+                    <td class="user-email">john.smith@example.com</td>
+                    <td class="user-phone">+1 555-123-4567</td>
+                    <td class="user-address">123 Main Street, New York</td>
+                    <td class="user-coords">40.7128</td>
+                    <td class="user-coords">-74.0060</td>
+                    <td class="user-physical"><span class="user-physical-main">175cm / 70kg</span><br><span class="user-physical-sub">Blue eyes</span></td>
+                </tr>
+                <tr>
+                    <td><span class="user-index">2</span></td>
+                    <td class="user-name">Emily Johnson</td>
+                    <td class="user-email">emily.j@example.com</td>
+                    <td class="user-phone">+1 555-234-5678</td>
+                    <td class="user-address">456 Oak Avenue, Boston</td>
+                    <td class="user-coords">42.3601</td>
+                    <td class="user-coords">-71.0589</td>
+                    <td class="user-physical"><span class="user-physical-main">165cm / 58kg</span><br><span class="user-physical-sub">Green eyes</span></td>
+                </tr>
+                <tr>
+                    <td><span class="user-index">3</span></td>
+                    <td class="user-name">Michael Davis</td>
+                    <td class="user-email">m.davis@example.com</td>
+                    <td class="user-phone">+1 555-345-6789</td>
+                    <td class="user-address">789 Pine Road, Chicago</td>
+                    <td class="user-coords">41.8781</td>
+                    <td class="user-coords">-87.6298</td>
+                    <td class="user-physical"><span class="user-physical-main">182cm / 85kg</span><br><span class="user-physical-sub">Brown eyes</span></td>
+                </tr>
+                <tr>
+                    <td><span class="user-index">4</span></td>
+                    <td class="user-name">Sarah Wilson</td>
+                    <td class="user-email">sarah.w@example.com</td>
+                    <td class="user-phone">+1 555-456-7890</td>
+                    <td class="user-address">321 Elm Street, Seattle</td>
+                    <td class="user-coords">47.6062</td>
+                    <td class="user-coords">-122.3321</td>
+                    <td class="user-physical"><span class="user-physical-main">168cm / 62kg</span><br><span class="user-physical-sub">Hazel eyes</span></td>
+                </tr>
+                <tr>
+                    <td><span class="user-index">5</span></td>
+                    <td class="user-name">David Brown</td>
+                    <td class="user-email">d.brown@example.com</td>
+                    <td class="user-phone">+1 555-567-8901</td>
+                    <td class="user-address">654 Maple Drive, Denver</td>
+                    <td class="user-coords">39.7392</td>
+                    <td class="user-coords">-104.9903</td>
+                    <td class="user-physical"><span class="user-physical-main">178cm / 80kg</span><br><span class="user-physical-sub">Gray eyes</span></td>
+                </tr>
+            </tbody>
+        </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+</div>
+
+{% if not users %}
+<!-- Benchmark Section - Only on Home Page -->
+<section class="benchmark-section">
+    <div class="benchmark-card">
+        <div class="benchmark-toggle" id="benchmark-toggle">
+            <div class="benchmark-toggle-content">
+                <h3>⚡ Performance Benchmark</h3>
+                <p>Test the speed of our optimized SQL stored procedures</p>
+            </div>
+            <span class="benchmark-toggle-icon" id="toggle-icon">▼</span>
+        </div>
+        <div class="benchmark-body" id="benchmark-body">
+        
+        <div class="benchmark-algorithms">
+            <div class="algorithm-tag">
+                <span class="algorithm-icon">📊</span>
+                <span>Box-Muller Transform</span>
+                <span class="algorithm-desc">Normal distribution</span>
+            </div>
+            <div class="algorithm-tag">
+                <span class="algorithm-icon">🌍</span>
+                <span>Arcsine Projection</span>
+                <span class="algorithm-desc">Uniform sphere coords</span>
+            </div>
+            <div class="algorithm-tag">
+                <span class="algorithm-icon">⚡</span>
+                <span>Array Lookups</span>
+                <span class="algorithm-desc">O(1) vs O(n)</span>
+            </div>
+            <div class="algorithm-tag">
+                <span class="algorithm-icon">🔗</span>
+                <span>Set-Based SQL</span>
+                <span class="algorithm-desc">No row-by-row loops</span>
+            </div>
+        </div>
+        
+        <div class="benchmark-controls">
+            <div class="benchmark-input-group">
+                <label for="benchmark-count">Users to generate:</label>
+                <select id="benchmark-count" class="form-select">
+                    <option value="100">100 users</option>
+                    <option value="500">500 users</option>
+                    <option value="1000" selected>1,000 users</option>
+                    <option value="5000">5,000 users</option>
+                    <option value="10000">10,000 users</option>
+                </select>
+            </div>
+            <button id="run-benchmark" class="btn btn-primary btn-sm">
+                <span class="btn-icon">⏱</span> Run Benchmark
+            </button>
+        </div>
+        <div id="benchmark-results" class="benchmark-results" style="display: none;">
+            <div class="benchmark-stat">
+                <span class="benchmark-stat-value" id="result-speed">-</span>
+                <span class="benchmark-stat-label">users/second</span>
+            </div>
+            <div class="benchmark-stat">
+                <span class="benchmark-stat-value" id="result-time">-</span>
+                <span class="benchmark-stat-label">seconds</span>
+            </div>
+            <div class="benchmark-stat">
+                <span class="benchmark-stat-value" id="result-count">-</span>
+                <span class="benchmark-stat-label">users generated</span>
+            </div>
+        </div>
+        <div id="benchmark-loading" class="benchmark-loading" style="display: none;">
+            <span class="spinner"></span> Running benchmark...
+        </div>
+        </div>
+    </div>
+</section>
+
+<!-- Markov Chain Text Generator Demo -->
+<section class="markov-section">
+    <div class="markov-card">
+        <div class="markov-toggle" id="markov-toggle">
+            <div class="markov-toggle-content">
+                <h3>🔗 Markov Chain Text Generator</h3>
+                <p>Generate realistic random text using trained language patterns</p>
+            </div>
+            <span class="markov-toggle-icon" id="markov-toggle-icon">▼</span>
+        </div>
+        <div class="markov-body" id="markov-body">
+            <div class="markov-algorithms">
+                <div class="algorithm-tag">
+                    <span class="algorithm-icon">📚</span>
+                    <span>Bigram Transitions</span>
+                    <span class="algorithm-desc">Word-to-word probabilities</span>
+                </div>
+                <div class="algorithm-tag">
+                    <span class="algorithm-icon">🔢</span>
+                    <span>Integer IDs</span>
+                    <span class="algorithm-desc">Fast O(1) comparisons</span>
+                </div>
+                <div class="algorithm-tag">
+                    <span class="algorithm-icon">📊</span>
+                    <span>HSTORE Index</span>
+                    <span class="algorithm-desc">O(1) group lookups</span>
+                </div>
+                <div class="algorithm-tag">
+                    <span class="algorithm-icon">⚡</span>
+                    <span>Pre-computed Weights</span>
+                    <span class="algorithm-desc">Cumulative selection</span>
+                </div>
+            </div>
+            
+            <div class="markov-controls">
+                <div class="markov-input-group">
+                    <label for="markov-locale">Language:</label>
+                    <select id="markov-locale" class="form-select">
+                        <option value="en_US">🇺🇸 English</option>
+                        <option value="de_DE">🇩🇪 German</option>
+                    </select>
+                </div>
+                <div class="markov-input-group">
+                    <label for="markov-seed">Seed:</label>
+                    <input type="number" id="markov-seed" class="form-input" value="42" min="0" style="width: 100px;">
+                </div>
+                <button id="generate-markov" class="btn btn-primary btn-sm">
+                    <span class="btn-icon">✦</span> Generate Text
+                </button>
+            </div>
+            
+            <div id="markov-results" class="markov-results" style="display: none;">
+                <div id="markov-samples"></div>
+            </div>
+            <div id="markov-loading" class="markov-loading" style="display: none;">
+                <span class="spinner"></span> Generating text...
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if not users %}
+<script>
+// Preview section toggle functionality
+const previewToggle = document.getElementById('preview-toggle');
+const previewBody = document.getElementById('preview-body');
+const previewToggleIcon = document.getElementById('preview-toggle-icon');
+
+previewToggle.addEventListener('click', function() {
+    const isExpanded = previewBody.classList.toggle('expanded');
+    previewToggleIcon.textContent = isExpanded ? '▲' : '▼';
+    previewToggle.classList.toggle('active', isExpanded);
+});
+
+// Benchmark toggle functionality
+const benchmarkToggle = document.getElementById('benchmark-toggle');
+const benchmarkBody = document.getElementById('benchmark-body');
+const toggleIcon = document.getElementById('toggle-icon');
+
+benchmarkToggle.addEventListener('click', function() {
+    const isExpanded = benchmarkBody.classList.toggle('expanded');
+    toggleIcon.textContent = isExpanded ? '▲' : '▼';
+    benchmarkToggle.classList.toggle('active', isExpanded);
+});
+
+document.getElementById('run-benchmark').addEventListener('click', async function() {
+    const btn = this;
+    const count = document.getElementById('benchmark-count').value;
+    const resultsDiv = document.getElementById('benchmark-results');
+    const loadingDiv = document.getElementById('benchmark-loading');
+    
+    // Show loading, hide results
+    btn.disabled = true;
+    loadingDiv.style.display = 'flex';
+    resultsDiv.style.display = 'none';
+    
+    try {
+        const response = await fetch('/api/benchmark', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                locale: '{{ current_locale }}',
+                seed: {{ seed }},
+                count: parseInt(count)
+            })
+        });
+        
+        const data = await response.json();
+        
+        // Update results
+        document.getElementById('result-speed').textContent = data.users_per_second.toLocaleString();
+        document.getElementById('result-time').textContent = data.elapsed_seconds.toFixed(3);
+        document.getElementById('result-count').textContent = data.count.toLocaleString();
+        
+        // Show results
+        resultsDiv.style.display = 'flex';
+    } catch (error) {
+        alert('Benchmark failed: ' + error.message);
+    } finally {
+        btn.disabled = false;
+        loadingDiv.style.display = 'none';
+    }
+});
+
+// Markov Chain toggle functionality
+const markovToggle = document.getElementById('markov-toggle');
+const markovBody = document.getElementById('markov-body');
+const markovToggleIcon = document.getElementById('markov-toggle-icon');
+
+markovToggle.addEventListener('click', function() {
+    const isExpanded = markovBody.classList.toggle('expanded');
+    markovToggleIcon.textContent = isExpanded ? '▲' : '▼';
+    markovToggle.classList.toggle('active', isExpanded);
+});
+
+document.getElementById('generate-markov').addEventListener('click', async function() {
+    const btn = this;
+    const locale = document.getElementById('markov-locale').value;
+    const seed = parseInt(document.getElementById('markov-seed').value) || 42;
+    const resultsDiv = document.getElementById('markov-results');
+    const samplesDiv = document.getElementById('markov-samples');
+    const loadingDiv = document.getElementById('markov-loading');
+    
+    btn.disabled = true;
+    loadingDiv.style.display = 'flex';
+    resultsDiv.style.display = 'none';
+    
+    try {
+        const response = await fetch('/api/markov', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                locale: locale,
+                seed: seed,
+                min_words: 10,
+                max_words: 25
+            })
+        });
+        
+        const data = await response.json();
+        
+        // Display samples
+        samplesDiv.innerHTML = data.samples.map(sample => `
+            <div class="markov-sample">
+                <div class="markov-sample-header">
+                    <span class="markov-sample-seed">Seed: ${sample.seed}</span>
+                    <span class="markov-sample-locale">${locale === 'en_US' ? '🇺🇸' : '🇩🇪'}</span>
+                </div>
+                <p class="markov-sample-text">"${sample.text}"</p>
+            </div>
+        `).join('');
+        
+        resultsDiv.style.display = 'block';
+    } catch (error) {
+        alert('Generation failed: ' + error.message);
+    } finally {
+        btn.disabled = false;
+        loadingDiv.style.display = 'none';
+    }
+});
+</script>
+{% endif %}
+{% endblock %}
